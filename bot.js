@@ -11,7 +11,7 @@ const dbPath = path.join(__dirname, 'results', 'db.json');
 const run = () => new Promise(async (resolve, reject) => {
   try {
     console.log('Stated Scraping...');
-    browser = await pupHelper.launchBrowser(true);
+    browser = await pupHelper.launchBrowser();
     
     for (let i = 0; i < urls.length; i++) {
       await scrapeUrl(i);
@@ -48,6 +48,7 @@ const scrapeUrl = (urlIdx) => new Promise(async (resolve, reject) => {
       const salesRanksSub = await page.$$('#SalesRank > ul.zg_hrsr > .zg_hrsr_item');
       for (let i = 0; i < salesRanksSub.length; i++) {
         resKey = await pupHelper.getTxt('.zg_hrsr_ladder > a', salesRanksSub[i])
+        resKey = resKey.replace(/\(kindle store\)/gi, '').trim();
         resVal = await pupHelper.getTxt('.zg_hrsr_rank', salesRanksSub[i])
         resVal = resVal.replace(/[#,]/gi, '').trim();
         result[resKey] = resVal;
